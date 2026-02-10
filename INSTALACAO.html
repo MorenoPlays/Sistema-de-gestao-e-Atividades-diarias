@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Step Game - Guia de Instalação</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        h2 {
+            color: #667eea;
+            margin: 30px 0 15px;
+            font-size: 1.8em;
+        }
+        h3 {
+            color: #764ba2;
+            margin: 20px 0 10px;
+            font-size: 1.3em;
+        }
+        .subtitle {
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 40px;
+        }
+        .step {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #667eea;
+        }
+        .code {
+            background: #2d3748;
+            color: #68d391;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        .warning {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .success {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        ul {
+            margin-left: 30px;
+            line-height: 1.8;
+        }
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .feature {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .feature-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-weight: bold;
+            text-decoration: none;
+            margin: 10px 10px 10px 0;
+            transition: transform 0.3s;
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Star Step Game</h1>
+        <p class="subtitle">Sistema de Gestão - Guia de Instalação e Uso</p>
+
+        <div class="feature-list">
+            <div class="feature">
+                <div class="feature-icon">🔐</div>
+                <h3>Autenticação</h3>
+                <p>Login e cadastro seguros</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📋</div>
+                <h3>Atividades</h3>
+                <p>Controle diário completo</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">💰</div>
+                <h3>Salários</h3>
+                <p>Folhas profissionais</p>
+            </div>
+        </div>
+
+        <h2>📋 Pré-requisitos</h2>
+        <div class="step">
+            <h3>Você precisa ter instalado:</h3>
+            <ul>
+                <li><strong>Node.js</strong> (versão 16 ou superior)</li>
+                <li><strong>npm</strong> (vem com Node.js)</li>
+            </ul>
+            <p style="margin-top: 15px;">
+                <a href="https://nodejs.org/" target="_blank" class="btn">⬇️ Baixar Node.js</a>
+            </p>
+        </div>
+
+        <h2>🚀 Instalação Rápida</h2>
+        
+        <div class="step">
+            <h3>1️⃣ Abra o Terminal/Prompt de Comando</h3>
+            <p>Navegue até a pasta do projeto:</p>
+            <div class="code">cd caminho/para/star-step-app</div>
+        </div>
+
+        <div class="step">
+            <h3>2️⃣ Instale as Dependências</h3>
+            <p>Execute o comando:</p>
+            <div class="code">npm install</div>
+            <p style="margin-top: 10px;"><em>Aguarde alguns minutos enquanto os pacotes são instalados...</em></p>
+        </div>
+
+        <div class="step">
+            <h3>3️⃣ Inicie o Servidor</h3>
+            <p>Execute o comando:</p>
+            <div class="code">npm run dev</div>
+        </div>
+
+        <div class="success">
+            <strong>✅ Pronto!</strong> O navegador abrirá automaticamente em:
+            <div class="code" style="margin-top: 10px;">http://localhost:3000</div>
+        </div>
+
+        <h2>💻 Como Usar</h2>
+
+        <div class="step">
+            <h3>Primeiro Acesso</h3>
+            <ol style="margin-left: 20px; line-height: 1.8;">
+                <li>Clique em <strong>"Cadastre-se"</strong></li>
+                <li>Preencha seu nome, email e senha</li>
+                <li>Clique em <strong>"Criar Conta"</strong></li>
+                <li>Faça login com suas credenciais</li>
+            </ol>
+        </div>
+
+        <div class="step">
+            <h3>📋 Registrar Atividades Diárias</h3>
+            <ol style="margin-left: 20px; line-height: 1.8;">
+                <li>Clique na aba <strong>"Atividades Diárias"</strong></li>
+                <li>Preencha a data, semana e expediente</li>
+                <li>Adicione valores de entrada/saída (opcional)</li>
+                <li>Clique em <strong>"Adicionar Atividade"</strong></li>
+                <li>Visualize o histórico na tabela</li>
+            </ol>
+        </div>
+
+        <div class="step">
+            <h3>💰 Gerar Folha de Salário</h3>
+            <ol style="margin-left: 20px; line-height: 1.8;">
+                <li>Clique na aba <strong>"Folha de Salário"</strong></li>
+                <li>Selecione o mês e ano</li>
+                <li>Preencha nome e cargo do funcionário</li>
+                <li>Insira salário base e descontos</li>
+                <li>Escolha a data de pagamento</li>
+                <li>Clique em <strong>"Gerar Folha de Salário"</strong></li>
+                <li>Use o botão <strong>"Imprimir"</strong> para salvar em PDF</li>
+            </ol>
+        </div>
+
+        <h2>🎨 Recursos</h2>
+        <ul>
+            <li>✨ Interface moderna e responsiva</li>
+            <li>🔒 Autenticação com localStorage</li>
+            <li>📊 Tabelas dinâmicas e interativas</li>
+            <li>🖨️ Impressão otimizada para folhas de salário</li>
+            <li>💾 Dados salvos localmente no navegador</li>
+            <li>📱 Funciona em desktop, tablet e mobile</li>
+        </ul>
+
+        <div class="warning">
+            <strong>⚠️ Importante:</strong> Esta é uma versão de demonstração que usa localStorage. 
+            Para uso em produção real, recomenda-se:
+            <ul style="margin-top: 10px;">
+                <li>Implementar backend com banco de dados</li>
+                <li>Adicionar criptografia de senhas</li>
+                <li>Usar autenticação JWT</li>
+                <li>Implementar HTTPS</li>
+            </ul>
+        </div>
+
+        <h2>📁 Estrutura do Projeto</h2>
+        <div class="code" style="color: #cbd5e0;">
+star-step-app/
+├── src/
+│   ├── components/      # Componentes React
+│   │   ├── Login.jsx
+│   │   ├── Register.jsx
+│   │   └── Header.jsx
+│   ├── pages/          # Páginas
+│   │   ├── Activities.jsx
+│   │   └── Salary.jsx
+│   ├── utils/          # Utilitários
+│   │   └── auth.js
+│   ├── App.jsx         # App principal
+│   └── main.jsx        # Entry point
+├── package.json        # Dependências
+└── README.md          # Documentação
+        </div>
+
+        <h2>🛠️ Comandos Úteis</h2>
+        <div class="step">
+            <p><strong>Desenvolvimento:</strong></p>
+            <div class="code">npm run dev</div>
+            
+            <p style="margin-top: 15px;"><strong>Build para produção:</strong></p>
+            <div class="code">npm run build</div>
+            
+            <p style="margin-top: 15px;"><strong>Preview do build:</strong></p>
+            <div class="code">npm run preview</div>
+        </div>
+
+        <h2>❓ Problemas Comuns</h2>
+        
+        <div class="step">
+            <h3>Erro: "command not found: npm"</h3>
+            <p>Solução: Instale o Node.js em <a href="https://nodejs.org/" target="_blank">nodejs.org</a></p>
+        </div>
+
+        <div class="step">
+            <h3>Porta 3000 já está em uso</h3>
+            <p>Solução: O Vite escolherá automaticamente outra porta (3001, 3002, etc.)</p>
+        </div>
+
+        <div class="step">
+            <h3>Página em branco após npm run dev</h3>
+            <p>Solução: Limpe o cache do navegador ou use modo anônimo</p>
+        </div>
+
+        <div style="margin-top: 50px; padding-top: 30px; border-top: 2px solid #e2e8f0; text-align: center;">
+            <p style="color: #666;">
+                © 2026 Star Step Game. Todos os direitos reservados.<br>
+                <em>Desenvolvido com ❤️ usando React + Tailwind CSS</em>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
