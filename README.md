@@ -174,7 +174,7 @@ Sugestões e melhorias são bem-vindas!
 
 ## 📝 Licença
 
-© 2026 MPGestor. Todos os direitos reservados.
+© 2026 MorenoPlays. Todos os direitos reservados.
 
 ---
 

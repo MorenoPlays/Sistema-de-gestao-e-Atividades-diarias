@@ -140,7 +140,7 @@ export const exportService = {
     // Rodapé
     doc.setTextColor(100, 100, 100);
     doc.setFontSize(8);
-    doc.text('© 2026 MPGestor', pageWidth / 2, doc.internal.pageSize.getHeight() - 10, { align: 'center' });
+    doc.text('© 2026 MorenoPlays', pageWidth / 2, doc.internal.pageSize.getHeight() - 10, { align: 'center' });
 
     const fileName = `Escala_de_Trabalho_${new Date().toISOString().split('T')[0]}.pdf`;
     doc.save(fileName);
@@ -258,7 +258,7 @@ export const exportService = {
 
     doc.setTextColor(100, 100, 100);
     doc.setFontSize(8);
-    doc.text('© 2026 MPGestor', pageWidth / 2, doc.internal.pageSize.getHeight() - 10, { align: 'center' });
+    doc.text('© 2026 MorenoPlays', pageWidth / 2, doc.internal.pageSize.getHeight() - 10, { align: 'center' });
 
     const dateStr = formatDate(date).replace(/\//g, '-');
     const fileName = `Escala_${dateStr}.pdf`;
