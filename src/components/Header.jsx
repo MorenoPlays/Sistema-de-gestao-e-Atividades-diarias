@@ -13,7 +13,7 @@ export default function Header({ user, onLogout }) {
             </div>
             <div className="min-w-0">
               <h1 className="text-lg md:text-xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent truncate">
-                Star Step Game
+                MPGestor
               </h1>
               <p className="text-xs text-gray-500 hidden sm:block">Sistema de Gestão</p>
             </div>

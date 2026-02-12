@@ -3,7 +3,7 @@
 ║                                                                                ║
 ║                   ✅ INTEGRAÇÃO FRONTEND + BACKEND COMPLETA ✅                ║
 ║                                                                                ║
-║                      Star Step Game - Sistema Conectado                        ║
+║                      MPGestor - Sistema Conectado                        ║
 ║                                                                                ║
 ╚════════════════════════════════════════════════════════════════════════════════╝
 
@@ -315,5 +315,5 @@ Longo Prazo:
 ╚════════════════════════════════════════════════════════════════════════════════╝
 
 Fevereiro, 2026
-Star Step Game - Sistema de Gestão Integrado
+MPGestor - Sistema de Gestão Integrado
 

@@ -57,7 +57,7 @@ export default function Activities() {
   const [formData, setFormData] = useState({
     date: new Date().toISOString().split('T')[0],
     week: calculateWeekFromDate(new Date().toISOString().split('T')[0]),
-    company: 'Star Step Game',
+    company: 'MPGestor',
     userId: '',
     moneyIn: '',
     moneyOut: '',
@@ -145,7 +145,7 @@ export default function Activities() {
       setFormData({
         date: new Date().toISOString().split('T')[0],
         week: calculateWeekFromDate(new Date().toISOString().split('T')[0]),
-        company: 'Star Step Game',
+        company: 'MPGestor',
         moneyIn: '',
         moneyOut: '',
         description: '',

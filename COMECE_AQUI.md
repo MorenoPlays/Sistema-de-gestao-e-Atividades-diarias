@@ -1,4 +1,4 @@
-# 🚀 COMECE AQUI - Star Step Game Backend
+# 🚀 COMECE AQUI - MPGestor Backend
 
 Bem-vindo! Seu backend está 100% pronto. Siga estes passos para começar em **5 minutos**.
 
@@ -303,5 +303,5 @@ Seu backend está pronto para produção!
 
 ---
 
-*Star Step Game - Sistema de Gestão de Atividades e Salários*
+*MPGestor - Sistema de Gestão de Atividades e Salários*
 *Criado com ❤️ em TypeScript + Express + PostgreSQL*

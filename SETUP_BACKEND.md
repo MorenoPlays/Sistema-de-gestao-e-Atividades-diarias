@@ -1,4 +1,4 @@
-# 🚀 Guia de Setup - Star Step Game Backend
+# 🚀 Guia de Setup - MPGestor Backend
 
 ## ✅ O que foi criado
 

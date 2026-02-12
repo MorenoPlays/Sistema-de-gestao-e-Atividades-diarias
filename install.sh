@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🎮 Star Step Game - Instalação Rápida"
+echo "🎮 MPGestor - Instalação Rápida"
 echo "======================================"
 echo ""
 

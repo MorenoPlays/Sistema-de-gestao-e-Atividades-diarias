@@ -1,4 +1,4 @@
-# 🎮 Star Step Game - Sistema de Gestão de Atividades
+# 🎮 MPGestor - Sistema de Gestão de Atividades
 
 > **Sistema completo de gestão de atividades diárias e folha de pagamento**  
 > Desenvolvido em React + Express + PostgreSQL
@@ -174,7 +174,7 @@ Sugestões e melhorias são bem-vindas!
 
 ## 📝 Licença
 
-© 2026 Star Step Game. Todos os direitos reservados.
+© 2026 MPGestor. Todos os direitos reservados.
 
 ---
 

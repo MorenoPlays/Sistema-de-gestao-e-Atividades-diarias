@@ -1,6 +1,6 @@
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║                                                                              ║
-║                   ✅ BACKEND COMPLETO - STAR STEP GAME ✅                   ║
+║                   ✅ BACKEND COMPLETO - MPGestor ✅                   ║
 ║                                                                              ║
 ║                  Sistema de Gestão de Atividades e Salários                 ║
 ║                      Multi-Empresa | Multi-Usuário | Seguro                ║
@@ -326,4 +326,4 @@ Docs:      ✅ Completa e detalhada
 ╚══════════════════════════════════════════════════════════════════════════════╝
 
 Fevereiro, 2026
-Star Step Game - Sistema de Gestão de Atividades e Salários
+MPGestor - Sistema de Gestão de Atividades e Salários

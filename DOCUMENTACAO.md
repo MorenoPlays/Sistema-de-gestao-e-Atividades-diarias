@@ -1,4 +1,4 @@
-# 📚 Índice de Documentação - Star Step Game
+# 📚 Índice de Documentação - MPGestor
 
 ## 🎯 Comece Aqui
 
@@ -236,4 +236,4 @@ Seu backend está 100% completo e pronto para ser integrado ao frontend.
 ---
 
 *Última atualização: Fevereiro 2026*
-*Sistema: Star Step Game - Gestão de Atividades e Salários*
+*Sistema: MPGestor - Gestão de Atividades e Salários*

@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# Script de Setup Completo - Star Step Game
+# Script de Setup Completo - MPGestor
 # Executa este script para setup local completo
 
 set -e  # Exit on error
 
-echo "🚀 Star Step Game - Setup Completo"
+echo "🚀 MPGestor - Setup Completo"
 echo "=================================="
 echo ""
 

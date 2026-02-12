@@ -38,7 +38,7 @@ export default function Login({ onLogin, onSwitchToRegister }) {
             </svg>
           </div>
           <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-2">
-            Star Step Game
+            MPGestor
           </h1>
           <p className="text-gray-600 text-lg">Sistema de Gestão</p>
         </div>
@@ -98,7 +98,7 @@ export default function Login({ onLogin, onSwitchToRegister }) {
         </div>
 
         <p className="text-center text-gray-500 text-sm mt-8">
-          © 2026 Star Step Game. Todos os direitos reservados.
+          © 2026 MPGestor. Todos os direitos reservados.
         </p>
       </div>
     </div>

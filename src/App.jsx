@@ -134,7 +134,7 @@ function App() {
 
       {/* Footer */}
       <footer className="bg-white mt-16 py-6 text-center text-gray-500 text-sm">
-        <p>© 2026 Star Step Game. Todos os direitos reservados.</p>
+        <p>© 2026 MPGestor. Todos os direitos reservados.</p>
       </footer>
     </div>
   );

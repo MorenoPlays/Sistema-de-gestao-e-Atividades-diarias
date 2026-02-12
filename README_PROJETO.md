@@ -1,4 +1,4 @@
-# 🎯 Star Step Game - Sistema de Gestão Completo
+# 🎯 MPGestor - Sistema de Gestão Completo
 
 > **Status**: ✅ **100% COMPLETO** | **Frontend** ✅ **Backend** ✅ **Database** ✅
 
@@ -503,7 +503,7 @@ MIT - Livre para usar, modificar e distribuir
 ## 👨‍💻 Autor
 
 **MorenoPlays**  
-Star Step Game - Sistema de Gestão de Atividades e Salários  
+MPGestor - Sistema de Gestão de Atividades e Salários  
 Fevereiro, 2026
 
 ---

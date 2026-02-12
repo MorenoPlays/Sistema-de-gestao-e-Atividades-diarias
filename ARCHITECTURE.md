@@ -1,4 +1,4 @@
-# 🏗️ Arquitetura do Star Step Game
+# 🏗️ Arquitetura do MPGestor
 
 ## 📐 Diagrama geral do sistema
 

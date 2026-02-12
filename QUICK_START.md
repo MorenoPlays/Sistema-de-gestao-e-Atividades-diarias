@@ -1,4 +1,4 @@
-# ⚡ Quick Start - Backend Star Step Game
+# ⚡ Quick Start - Backend MPGestor
 
 ## 🚀 5 Minutos para ter tudo funcionando
 

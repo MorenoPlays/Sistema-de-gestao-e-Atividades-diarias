@@ -1,7 +1,7 @@
 {
   "name": "star-step-game",
   "version": "1.0.0",
-  "description": "Star Step Game Management System",
+  "description": "MPGestor Management System",
   "private": true,
   "scripts": {
     "dev": "vite",

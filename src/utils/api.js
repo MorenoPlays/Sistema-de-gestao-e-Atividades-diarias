@@ -1,6 +1,6 @@
 /**
  * API Service - Frontend
- * Integração com Backend Star Step Game
+ * Integração com Backend MPGestor
  */
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
