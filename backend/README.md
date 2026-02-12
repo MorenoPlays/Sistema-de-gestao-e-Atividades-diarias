@@ -1,4 +1,4 @@
-# 🚀 Star Step Game Backend
+# 🚀 MPGestor Backend
 
 Backend REST API para o sistema de gestão de atividades diárias e folha de salário.
 
@@ -295,4 +295,4 @@ MIT
 
 ## 👨‍💻 Autor
 
-MorenoPlays - Star Step Game
+MorenoPlays - MPGestor
