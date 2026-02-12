@@ -87,7 +87,8 @@ export class SalaryService {
 
   static async deleteSalary(salaryId: string, companyId: string) {
     const salary = await this.getSalary(salaryId, companyId);
-
+    if(!salary)
+      return { message: "Folha de salário não encontrada" };
     await prisma.salary.delete({
       where: { id: salaryId },
     });

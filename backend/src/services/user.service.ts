@@ -73,7 +73,12 @@ export class UserService {
       where: {
         id: userId,
       },
-      data,
+      data: {
+        name: data.name,
+        phone: data.phone,
+        role: data.role,
+        companyId: companyId,
+      },
       select: {
         id: true,
         name: true,

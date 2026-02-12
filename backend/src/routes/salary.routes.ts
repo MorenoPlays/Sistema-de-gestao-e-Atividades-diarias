@@ -12,7 +12,7 @@ router.use(authMiddleware);
 router.post("/", async (req: AuthRequest, res: Response) => {
   try {
     const companyId = req.user?.companyId;
-    const userRole = req.user?.role;
+  const userRole = req.user?.role as string | undefined;
 
     if (!companyId) {
       return res.status(400).json({
@@ -22,7 +22,7 @@ router.post("/", async (req: AuthRequest, res: Response) => {
     }
 
     // Apenas admin e manager podem criar salários
-    if (!["ADMIN", "MANAGER"].includes(userRole)) {
+    if (!userRole || !["ADMIN", "MANAGER"].includes(userRole)) {
       return res.status(403).json({
         success: false,
         message: "Acesso restrito a gerentes ou administradores",
@@ -111,7 +111,7 @@ router.put("/:id", async (req: AuthRequest, res: Response) => {
   try {
     const salaryId = req.params.id;
     const companyId = req.user?.companyId;
-    const userRole = req.user?.role;
+  const userRole = req.user?.role as string | undefined;
 
     if (!companyId) {
       return res.status(400).json({
@@ -121,7 +121,7 @@ router.put("/:id", async (req: AuthRequest, res: Response) => {
     }
 
     // Apenas admin e manager podem atualizar
-    if (!["ADMIN", "MANAGER"].includes(userRole)) {
+    if (!userRole || !["ADMIN", "MANAGER"].includes(userRole)) {
       return res.status(403).json({
         success: false,
         message: "Acesso restrito a gerentes ou administradores",

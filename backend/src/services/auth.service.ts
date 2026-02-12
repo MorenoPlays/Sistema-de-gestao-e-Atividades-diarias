@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import jwt, { Secret, SignOptions } from "jsonwebtoken";
 import { prisma } from "../lib/prisma.js";
 import { JWTPayload } from "../types/index.js";
 
@@ -121,12 +121,13 @@ export class AuthService {
       role: role as any,
     };
 
-    return jwt.sign(payload, process.env.JWT_SECRET || "secret", {
-      expiresIn: process.env.JWT_EXPIRES_IN || "7d",
-    });
+    const secret: Secret = process.env.JWT_SECRET || "secret";
+    const expiresIn: any = process.env.JWT_EXPIRES_IN || "7d";
+    return jwt.sign(payload as any, secret, { expiresIn } as any);
   }
 
   static async verifyToken(token: string): Promise<JWTPayload> {
-    return jwt.verify(token, process.env.JWT_SECRET || "secret") as JWTPayload;
+    const secret: Secret = process.env.JWT_SECRET || "secret";
+    return jwt.verify(token, secret) as JWTPayload;
   }
 }

@@ -10,10 +10,10 @@ router.use(authMiddleware);
 router.post("/", async (req: AuthRequest, res: Response) => {
   try {
     const companyId = req.user?.companyId;
-    const role = req.user?.role;
+  const role = req.user?.role as string | undefined;
 
-    if (!companyId) return res.status(400).json({ success: false, message: "Company ID não fornecido" });
-    if (!["ADMIN", "MANAGER"].includes(role)) return res.status(403).json({ success: false, message: "Acesso restrito" });
+  if (!companyId) return res.status(400).json({ success: false, message: "Company ID não fornecido" });
+  if (!role || !["ADMIN", "MANAGER"].includes(role)) return res.status(403).json({ success: false, message: "Acesso restrito" });
 
     const data = createEmployeeSchema.parse(req.body);
     const employee = await EmployeeService.createEmployee(companyId, data);
@@ -56,11 +56,11 @@ router.get("/:id", async (req: AuthRequest, res: Response) => {
 router.put("/:id", async (req: AuthRequest, res: Response) => {
   try {
     const companyId = req.user?.companyId;
-    const role = req.user?.role;
+  const role = req.user?.role as string | undefined;
     const id = req.params.id;
 
-    if (!companyId) return res.status(400).json({ success: false, message: "Company ID não fornecido" });
-    if (!["ADMIN", "MANAGER"].includes(role)) return res.status(403).json({ success: false, message: "Acesso restrito" });
+  if (!companyId) return res.status(400).json({ success: false, message: "Company ID não fornecido" });
+  if (!role || !["ADMIN", "MANAGER"].includes(role)) return res.status(403).json({ success: false, message: "Acesso restrito" });
 
     const data = updateEmployeeSchema.parse(req.body);
     const employee = await EmployeeService.updateEmployee(id, companyId, data);
@@ -75,7 +75,7 @@ router.put("/:id", async (req: AuthRequest, res: Response) => {
 router.delete("/:id", async (req: AuthRequest, res: Response) => {
   try {
     const companyId = req.user?.companyId;
-    const role = req.user?.role;
+  const role = req.user?.role as string | undefined;
     const id = req.params.id;
 
     if (!companyId) return res.status(400).json({ success: false, message: "Company ID não fornecido" });
