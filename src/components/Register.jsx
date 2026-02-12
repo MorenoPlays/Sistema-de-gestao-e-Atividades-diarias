@@ -1,43 +1,50 @@
 import { useState } from 'react';
-import { authService } from '../utils/auth';
+import { authService } from '../utils/api';
 
 export default function Register({ onRegister, onSwitchToLogin }) {
   const [name, setName] = useState('');
+  const [companyName, setCompanyName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
+    setLoading(true);
 
-    if (!name || !email || !password || !confirmPassword) {
+    if (!name || !companyName || !email || !password || !confirmPassword) {
       setError('Por favor, preencha todos os campos!');
+      setLoading(false);
       return;
     }
 
     if (password !== confirmPassword) {
       setError('As senhas não coincidem!');
+      setLoading(false);
       return;
     }
 
     if (password.length < 6) {
       setError('A senha deve ter pelo menos 6 caracteres!');
+      setLoading(false);
       return;
     }
 
-    const result = authService.register(email, password, name);
-    
-    if (result.success) {
-      setSuccess(result.message);
+    try {
+      await authService.register(name, companyName, email, password);
+      setSuccess('Empresa cadastrada com sucesso! Redirecionando...');
       setTimeout(() => {
         onSwitchToLogin();
       }, 2000);
-    } else {
-      setError(result.message);
+    } catch (err) {
+      setError(err.message || 'Erro ao cadastrar. Tente novamente.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -74,14 +81,27 @@ export default function Register({ onRegister, onSwitchToLogin }) {
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Nome Completo
+                Nome da Empresa
+              </label>
+              <input
+                type="text"
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+                className="input-field"
+                placeholder="Nome da sua empresa"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Seu Nome Completo
               </label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="input-field"
-                placeholder="Seu nome"
+                placeholder="Seu nome completo"
               />
             </div>
 
@@ -124,8 +144,8 @@ export default function Register({ onRegister, onSwitchToLogin }) {
               />
             </div>
 
-            <button type="submit" className="btn-primary w-full">
-              Criar Conta
+            <button type="submit" className="btn-primary w-full" disabled={loading}>
+              {loading ? 'Criando conta...' : 'Criar Conta'}
             </button>
           </form>
 

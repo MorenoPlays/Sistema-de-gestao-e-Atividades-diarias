@@ -1,26 +1,30 @@
 import { useState } from 'react';
-import { authService } from '../utils/auth';
+import { authService } from '../utils/api';
 
 export default function Login({ onLogin, onSwitchToRegister }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
 
     if (!email || !password) {
       setError('Por favor, preencha todos os campos!');
+      setLoading(false);
       return;
     }
 
-    const result = authService.login(email, password);
-    
-    if (result.success) {
+    try {
+      const result = await authService.login(email, password);
       onLogin(result.user);
-    } else {
-      setError(result.message);
+    } catch (err) {
+      setError(err.message || 'Erro ao fazer login. Tente novamente.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -75,8 +79,8 @@ export default function Login({ onLogin, onSwitchToRegister }) {
               />
             </div>
 
-            <button type="submit" className="btn-primary w-full">
-              Entrar
+            <button type="submit" className="btn-primary w-full" disabled={loading}>
+              {loading ? 'Entrando...' : 'Entrar'}
             </button>
           </form>
 

@@ -1,4 +1,4 @@
-import { authService } from '../utils/auth';
+import { authService } from '../utils/api';
 
 export default function Header({ user, onLogout }) {
   return (
@@ -21,8 +21,8 @@ export default function Header({ user, onLogout }) {
 
           <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
             <div className="text-right hidden md:block">
-              <p className="text-sm font-semibold text-gray-700 truncate">{user.name}</p>
-              <p className="text-xs text-gray-500 truncate">{user.email}</p>
+              <p className="text-sm font-semibold text-gray-700 truncate">{user?.name || 'Usuário'}</p>
+              <p className="text-xs text-gray-500 truncate">{user?.email || ''}</p>
             </div>
             <button
               onClick={onLogout}

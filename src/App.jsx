@@ -1,23 +1,40 @@
 import { useState, useEffect } from 'react';
-import { authService } from './utils/auth';
+import { authService } from './utils/api';
 import Login from './components/Login';
 import Register from './components/Register';
 import Header from './components/Header';
 import Activities from './pages/Activities';
 import Salary from './pages/Salary';
+import Employees from './pages/Employees';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [currentPage, setCurrentPage] = useState('activities');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is already logged in
-    const user = authService.getCurrentUser();
-    if (user) {
-      setCurrentUser(user);
-      setIsAuthenticated(true);
+    // Verificar se usuário está autenticado ao carregar
+    const checkAuth = async () => {
+      try {
+        const response = await authService.getCurrentUser();
+        // O response pode vir como { success: true, data: {...} } ou direto como {...}
+        const user = response.data || response;
+        setCurrentUser(user);
+        setIsAuthenticated(true);
+      } catch (err) {
+        // Usuário não está autenticado
+        setIsAuthenticated(false);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    if (authService.isAuthenticated()) {
+      checkAuth();
+    } else {
+      setLoading(false);
     }
   }, []);
 
@@ -40,6 +57,19 @@ function App() {
   const switchToLogin = () => {
     setShowRegister(false);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-purple-600"></div>
+          </div>
+          <p className="mt-4 text-gray-600">Carregando...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return showRegister ? (
@@ -83,13 +113,23 @@ function App() {
             >
               💰 Folha de Salário
             </button>
+            <button
+              onClick={() => setCurrentPage('employees')}
+              className={`py-4 px-2 border-b-4 font-semibold transition-all duration-300 ${
+                currentPage === 'employees'
+                  ? 'border-purple-600 text-purple-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              👥 Funcionários
+            </button>
           </div>
         </div>
       </div>
 
       {/* Page Content */}
       <main>
-        {currentPage === 'activities' ? <Activities /> : <Salary />}
+        {currentPage === 'activities' ? <Activities /> : currentPage === 'salary' ? <Salary /> : <Employees />}
       </main>
 
       {/* Footer */}

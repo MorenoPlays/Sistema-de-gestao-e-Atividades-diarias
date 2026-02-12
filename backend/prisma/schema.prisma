@@ -1,0 +1,189 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Modelo de Empresa (Tenant)
+model Company {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  email     String   @unique
+  phone     String?
+  address   String?
+  city      String?
+  country   String?  @default("Angola")
+  logoUrl   String?
+  
+  // Configurações
+  currency  String   @default("AOA")
+  timezone  String   @default("Africa/Luanda")
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relacionamentos
+  users     User[]
+  employees Employee[]
+  activities Activity[]
+  salaries  Salary[]
+}
+
+// Enum para roles de usuários
+enum UserRole {
+  ADMIN      // Administrador da empresa
+  MANAGER    // Gerente/Supervisor
+  EMPLOYEE   // Funcionário comum
+}
+
+// Modelo de Usuário
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String   // Hash bcrypt
+  name      String
+  phone     String?
+  avatar    String?
+  
+  // Multi-tenancy
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId String
+  
+  // Role na empresa
+  role      UserRole @default(EMPLOYEE)
+  
+  // Status
+  isActive  Boolean  @default(true)
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relacionamentos
+  activities Activity[]
+  salaries  Salary[]
+  // (opcional) vínculo com tabela Employee (um usuário pode representar um funcionário)
+  employee  Employee?
+  
+  @@unique([email, companyId])
+  @@index([companyId])
+}
+
+// Modelo de Atividades
+model Activity {
+  id        String   @id @default(cuid())
+  
+  // Dados da atividade
+  date      DateTime
+  description String?
+  weekNumber Int
+  
+  // Expediente
+  hoursStart String   // HH:MM
+  hoursEnd   String   // HH:MM
+  
+  // Movimentação de dinheiro (em Kz)
+  moneyIn   Decimal  @default(0) @db.Decimal(10, 2)
+  moneyOut  Decimal  @default(0) @db.Decimal(10, 2)
+  balance   Decimal  @default(0) @db.Decimal(10, 2) // Calculado automaticamente
+  
+  // Multi-tenancy
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId String
+  
+  // Usuário responsável
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([companyId])
+  @@index([userId])
+  @@index([date])
+}
+
+// Modelo de Folha de Salário
+model Salary {
+  id        String   @id @default(cuid())
+  
+  // Período
+  month     Int      // 1-12
+  year      Int
+  
+  // Dados financeiros
+  baseSalary    Decimal  @db.Decimal(12, 2)
+  deductions    Decimal  @default(0) @db.Decimal(12, 2)
+  netSalary     Decimal  @db.Decimal(12, 2)
+  
+  // Multi-tenancy
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId String
+  
+  // Ligação ao funcionário (Employee)
+  employee  Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  employeeId String
+
+  // (opcional) vínculo com conta de login
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String?  @unique
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@unique([employeeId, month, year])
+  @@index([companyId])
+  @@index([employeeId])
+}
+
+// Modelo de Funcionário (separado de User)
+model Employee {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String?
+  position  String?
+
+  // Multi-tenancy
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId String
+
+  // (opcional) vínculo com conta de login
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String?  @unique
+
+  // Relacionamentos
+  salaries  Salary[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([companyId])
+  @@index([userId])
+}
+
+// Logs de auditoria (opcional, para rastrear mudanças)
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String   // CREATE, UPDATE, DELETE
+  entity    String   // User, Activity, Salary, etc
+  entityId  String
+  
+  // Quem fez a ação
+  userId    String
+  
+  changes   Json?    // Mudanças realizadas
+  
+  createdAt DateTime @default(now())
+  
+  @@index([userId])
+  @@index([createdAt])
+}

@@ -178,6 +178,7 @@ export default function DailyClosureTable({ activities, filter }) {
                     <thead>
                       <tr className="bg-gradient-to-r from-purple-100 to-indigo-100">
                         <th className="px-2 md:px-3 py-2 text-left font-semibold text-gray-700">Semana</th>
+                        <th className="px-2 md:px-3 py-2 text-left font-semibold text-gray-700">Funcionário</th>
                         <th className="px-2 md:px-3 py-2 text-left font-semibold text-gray-700">Empresa</th>
                         <th className="px-2 md:px-3 py-2 text-right font-semibold text-gray-700">Entrada</th>
                         <th className="px-2 md:px-3 py-2 text-right font-semibold text-gray-700">Saída</th>
@@ -190,17 +191,21 @@ export default function DailyClosureTable({ activities, filter }) {
                         const actIn = parseFloat(activity.moneyIn) || 0;
                         const actOut = parseFloat(activity.moneyOut) || 0;
                         const actBalance = actIn - actOut;
+                        const expedient = activity.hoursStart && activity.hoursEnd 
+                          ? `${activity.hoursStart}/${activity.hoursEnd}` 
+                          : '-';
 
                         return (
                           <tr key={activity.id} className="hover:bg-purple-50 transition-colors">
-                            <td className="px-2 md:px-3 py-2 text-gray-700">{activity.week || '-'}</td>
-                            <td className="px-2 md:px-3 py-2 text-gray-700">{activity.company || '-'}</td>
+                            <td className="px-2 md:px-3 py-2 text-gray-700">{activity.weekNumber ? `${activity.weekNumber}ª Semana` : '-'}</td>
+                            <td className="px-2 md:px-3 py-2 text-gray-700">{activity.user?.name || activity.userId || '-'}</td>
+                            <td className="px-2 md:px-3 py-2 text-gray-700">{activity.company?.name || '-'}</td>
                             <td className="px-2 md:px-3 py-2 text-right text-green-600 font-medium">{formatCurrency(actIn)}</td>
                             <td className="px-2 md:px-3 py-2 text-right text-red-600 font-medium">{formatCurrency(actOut)}</td>
                             <td className="px-2 md:px-3 py-2 text-right font-medium" style={{ color: actBalance >= 0 ? '#9333ea' : '#f97316' }}>
                               {formatCurrency(actBalance)}
                             </td>
-                            <td className="px-2 md:px-3 py-2 text-gray-700 text-xs md:text-sm">{activity.hours || '-'}</td>
+                            <td className="px-2 md:px-3 py-2 text-gray-700 text-xs md:text-sm">{expedient}</td>
                           </tr>
                         );
                       })}

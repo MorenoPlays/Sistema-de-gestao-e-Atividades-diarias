@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { salaryService, authService, employeeService } from '../utils/api';
 
 export default function Salary() {
   const [formData, setFormData] = useState({
     month: '',
     year: new Date().getFullYear(),
-    employeeName: '',
+    employeeId: '',
     position: '',
     baseSalary: '',
     deductions: '0',
@@ -13,11 +14,43 @@ export default function Salary() {
 
   const [showResult, setShowResult] = useState(false);
   const [salaryData, setSalaryData] = useState(null);
+  const [salaries, setSalaries] = useState([]);
+  const [employees, setEmployees] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const months = [
     'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
     'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
   ];
+
+  useEffect(() => {
+    loadSalaries();
+    loadEmployees();
+  }, []);
+
+  const loadEmployees = async () => {
+    try {
+      const res = await employeeService.listEmployees();
+      setEmployees(res?.data || res || []);
+    } catch (err) {
+      console.warn('Erro ao carregar funcionários para Salary:', err);
+    }
+  };
+
+  const loadSalaries = async () => {
+    try {
+      setLoading(true);
+      setError('');
+      const data = await salaryService.listSalaries();
+      setSalaries(data?.data || data || []);
+    } catch (err) {
+      setError('Erro ao carregar folhas de salário');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -30,27 +63,74 @@ export default function Salary() {
     return parseFloat(num).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.month || !formData.year || !formData.employeeName || 
+    if (!formData.month || !formData.year || !formData.employeeId || 
         !formData.position || !formData.baseSalary || !formData.paymentDate) {
       alert('Por favor, preencha todos os campos obrigatórios!');
       return;
     }
 
-    const base = parseFloat(formData.baseSalary) || 0;
-    const deductions = parseFloat(formData.deductions) || 0;
-    const netSalary = base - deductions;
+    try {
+      setLoading(true);
+      setError('');
 
-    setSalaryData({
-      ...formData,
-      baseSalary: base,
-      deductions: deductions,
-      netSalary: netSalary
-    });
+      const base = parseFloat(formData.baseSalary) || 0;
+      const deductions = parseFloat(formData.deductions) || 0;
+      const netSalary = base - deductions;
 
-    setShowResult(true);
+      const salaryPayload = {
+        month: formData.month,
+        year: parseInt(formData.year),
+        employeeId: formData.employeeId,
+        position: formData.position,
+        baseSalary: base,
+        deductions: deductions,
+        netSalary: netSalary,
+        paymentDate: formData.paymentDate
+      };
+
+      // Enviar para o backend
+      const response = await salaryService.createSalary(salaryPayload);
+
+      // localizar nome do funcionário para exibir no resultado
+      const emp = employees.find(e => e.id === formData.employeeId);
+      setSalaryData({
+        ...formData,
+        employeeName: emp?.name || '',
+        baseSalary: base,
+        deductions: deductions,
+        netSalary: netSalary,
+        id: response?.data?.id
+      });
+
+      setShowResult(true);
+      
+      // Recarregar lista de folhas
+      await loadSalaries();
+      
+    } catch (err) {
+      setError('Erro ao salvar folha de salário: ' + (err.message || 'Tente novamente'));
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (confirm('Deseja remover esta folha de salário?')) {
+      try {
+        setLoading(true);
+        await salaryService.deleteSalary(id);
+        await loadSalaries();
+        alert('Folha removida com sucesso!');
+      } catch (err) {
+        setError('Erro ao remover folha: ' + (err.message || 'Tente novamente'));
+      } finally {
+        setLoading(false);
+      }
+    }
   };
 
   const handlePrint = () => {
@@ -63,6 +143,20 @@ export default function Salary() {
         <h2 className="text-3xl font-bold text-gray-800 mb-2">💰 Folha de Salário</h2>
         <p className="text-gray-600">Gere folhas de pagamento profissionais</p>
       </div>
+
+      {/* Mensagem de Erro */}
+      {error && (
+        <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+          {error}
+        </div>
+      )}
+
+      {/* Loading */}
+      {loading && (
+        <div className="mb-4 p-4 bg-blue-100 border border-blue-400 text-blue-700 rounded-lg">
+          Processando...
+        </div>
+      )}
 
       <div className="card mb-8 animate-slideInRight">
         <h3 className="text-xl font-bold text-gray-800 mb-6">Dados do Pagamento</h3>
@@ -98,16 +192,19 @@ export default function Salary() {
           </div>
 
           <div className="mb-6">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Nome do Funcionário *</label>
-            <input
-              type="text"
-              name="employeeName"
-              value={formData.employeeName}
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Funcionário *</label>
+            <select
+              name="employeeId"
+              value={formData.employeeId}
               onChange={handleChange}
-              placeholder="Nome completo"
               className="input-field"
               required
-            />
+            >
+              <option value="">Selecione o funcionário</option>
+              {employees.map(e => (
+                <option key={e.id} value={e.id}>{e.name} {e.position ? `— ${e.position}` : ''}</option>
+              ))}
+            </select>
           </div>
 
           <div className="mb-6">
@@ -207,8 +304,8 @@ export default function Salary() {
               </thead>
               <tbody>
                 <tr className="border-b border-gray-200">
-                  <td className="px-6 py-4 font-medium">{salaryData.employeeName}</td>
-                  <td className="px-6 py-4">{salaryData.position}</td>
+                  <td className="px-6 py-4 font-medium">{salaryData.employeeName || salaryData.employee?.name}</td>
+                  <td className="px-6 py-4">{salaryData.position || salaryData.employee?.position}</td>
                   <td className="px-6 py-4 text-right">{formatMoney(salaryData.baseSalary)}</td>
                   <td className="px-6 py-4 text-right text-red-600">{formatMoney(salaryData.deductions)}</td>
                   <td className="px-6 py-4 text-right font-bold text-green-600 text-lg">
@@ -224,7 +321,7 @@ export default function Salary() {
             <div className="text-center">
               <div className="border-t-2 border-gray-800 pt-3 mt-20">
                 <p className="font-bold text-gray-800">Assinatura do Trabalhador</p>
-                <p className="text-sm text-gray-600 mt-1">{salaryData.employeeName}</p>
+                <p className="text-sm text-gray-600 mt-1">{salaryData.employeeName || salaryData.employee?.name}</p>
               </div>
             </div>
             <div className="text-center">
@@ -239,6 +336,46 @@ export default function Salary() {
             <button onClick={handlePrint} className="btn-primary">
               🖨️ Imprimir Folha de Salário
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Listagem de Folhas de Salário */}
+      {salaries && salaries.length > 0 && (
+        <div className="card mb-8 animate-slideInRight">
+          <h3 className="text-xl font-bold text-gray-800 mb-6">Folhas de Salário Registradas</h3>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="px-4 py-2 text-left text-sm font-semibold">Funcionário</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold">Cargo</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold">Mês/Ano</th>
+                  <th className="px-4 py-2 text-right text-sm font-semibold">Salário Líquido</th>
+                  <th className="px-4 py-2 text-center text-sm font-semibold">Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {salaries.map((salary) => (
+                  <tr key={salary.id} className="border-t">
+                    <td className="px-4 py-3">{salary.employee?.name || salary.employeeName}</td>
+                    <td className="px-4 py-3">{salary.employee?.position || salary.position}</td>
+                    <td className="px-4 py-3">{salary.month}/{salary.year}</td>
+                    <td className="px-4 py-3 text-right font-semibold text-green-600">
+                      {formatMoney(salary.netSalary || salary.baseSalary - salary.deductions)}
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <button
+                        onClick={() => handleDelete(salary.id)}
+                        className="text-red-600 hover:text-red-800 font-semibold"
+                      >
+                        Remover
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       )}

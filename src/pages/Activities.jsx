@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { activityService, authService } from '../utils/auth';
+import { authService, activityService, employeeService } from '../utils/api';
 import { exportService } from '../utils/exportService';
 import ActivitySummary from '../components/ActivitySummary';
 import DateRangeFilter from '../components/DateRangeFilter';
@@ -51,10 +51,14 @@ export default function Activities() {
   const [currentUser, setCurrentUser] = useState(null);
   const [filter, setFilter] = useState({ startDate: '', endDate: '', isActive: false });
   const [showHoursSuggestions, setShowHoursSuggestions] = useState(false);
+  const [employees, setEmployees] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     date: new Date().toISOString().split('T')[0],
     week: calculateWeekFromDate(new Date().toISOString().split('T')[0]),
     company: 'Star Step Game',
+    userId: '',
     moneyIn: '',
     moneyOut: '',
     description: '',
@@ -63,16 +67,54 @@ export default function Activities() {
   });
 
   useEffect(() => {
-    const user = authService.getCurrentUser();
-    setCurrentUser(user);
-    loadActivities();
+    loadUserAndActivities();
   }, []);
 
-  const loadActivities = () => {
-    setActivities(activityService.getActivities());
+  const loadUserAndActivities = async () => {
+    try {
+      setLoading(true);
+      setError('');
+      const user = await authService.getCurrentUser();
+      const userData = user.data || user;
+      setCurrentUser(userData);
+      // carregar lista de funcionários da empresa (para select)
+      try {
+        const res = await employeeService.listEmployees();
+        const list = res?.data || res || [];
+        setEmployees(list);
+        // default: se o usuário autenticado estiver vinculado a um employee, preencha
+        const linked = list.find(e => e.userId === userData?.id);
+        setFormData(fd => ({ ...fd, userId: linked?.userId || userData?.id || fd.userId }));
+      } catch (err) {
+        console.warn('Não foi possível carregar funcionários para o select; fallback para users:', err);
+        // fallback: listar users para preencher o select (permite continuar a usar a UI)
+        try {
+          const u = await (await import('../utils/api')).userService.listUsers(1, 200);
+          const list = (u?.data || u || []).map(user => ({ id: user.id, name: user.name, userId: user.id, position: '' }));
+          setEmployees(list);
+          setFormData(fd => ({ ...fd, userId: userData?.id || fd.userId }));
+        } catch (err2) {
+          console.error('Fallback users também falhou:', err2);
+        }
+      }
+      await loadActivities();
+    } catch (err) {
+      setError('Erro ao carregar dados: ' + (err.message || 'Tente novamente'));
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleSubmit = (e) => {
+  const loadActivities = async () => {
+    try {
+      const data = await activityService.listActivities();
+      setActivities(data?.data || data || []);
+    } catch (err) {
+      console.error('Erro ao carregar atividades:', err);
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!formData.date || !formData.week || !formData.hoursStart || !formData.hoursEnd) {
@@ -80,40 +122,76 @@ export default function Activities() {
       return;
     }
 
-    // Converter para formato de string para compatibilidade com armazenamento
-    const activityData = {
-      ...formData,
-      hours: `${formData.hoursStart}/${formData.hoursEnd}`
-    };
+    try {
+      setLoading(true);
+      // Converter para formato de string para compatibilidade com armazenamento
+      const activityData = {
+        date: formData.date,
+        week: formData.week,
+        description: formData.description || '',
+        hoursStart: formData.hoursStart,
+        hoursEnd: formData.hoursEnd,
+        moneyIn: parseFloat(formData.moneyIn) || 0,
+        moneyOut: parseFloat(formData.moneyOut) || 0,
+        // opcional: atribuir atividade a outro usuário (backend valida permissão)
+        ...(formData.userId ? { userId: formData.userId } : {})
+      };
 
-    activityService.saveActivity(activityData);
-    loadActivities();
-    
-    // Reset form
-    setFormData({
-      date: new Date().toISOString().split('T')[0],
-      week: calculateWeekFromDate(new Date().toISOString().split('T')[0]),
-      company: 'Star Step Game',
-      moneyIn: '',
-      moneyOut: '',
-      description: '',
-      hoursStart: '',
-      hoursEnd: ''
-    });
-    setShowHoursSuggestions(false);
-  };
-
-  const handleDelete = (id) => {
-    if (confirm('Deseja remover esta atividade?')) {
-      activityService.deleteActivity(id);
-      loadActivities();
+      console.log('📤 Enviando atividade:', activityData);
+      await activityService.createActivity(activityData);
+      await loadActivities();
+      
+      // Reset form
+      setFormData({
+        date: new Date().toISOString().split('T')[0],
+        week: calculateWeekFromDate(new Date().toISOString().split('T')[0]),
+        company: 'Star Step Game',
+        moneyIn: '',
+        moneyOut: '',
+        description: '',
+        hoursStart: '',
+        hoursEnd: ''
+      });
+      setShowHoursSuggestions(false);
+      alert('Atividade registrada com sucesso!');
+    } catch (err) {
+      setError('Erro ao salvar atividade: ' + (err.message || 'Tente novamente'));
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleClearAll = () => {
+  const handleDelete = async (id) => {
+    if (confirm('Deseja remover esta atividade?')) {
+      try {
+        setLoading(true);
+        await activityService.deleteActivity(id);
+        await loadActivities();
+        alert('Atividade removida com sucesso!');
+      } catch (err) {
+        setError('Erro ao remover atividade: ' + (err.message || 'Tente novamente'));
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const handleClearAll = async () => {
     if (confirm('Deseja limpar todas as atividades?')) {
-      activityService.clearActivities();
-      loadActivities();
+      try {
+        setLoading(true);
+        // Se o backend suporta deleteAll, use-o. Caso contrário, delete uma por uma
+        const allActivities = activities;
+        for (const activity of allActivities) {
+          await activityService.deleteActivity(activity.id);
+        }
+        await loadActivities();
+        alert('Todas as atividades foram removidas!');
+      } catch (err) {
+        setError('Erro ao limpar atividades: ' + (err.message || 'Tente novamente'));
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -172,6 +250,20 @@ export default function Activities() {
         <p className="text-sm md:text-base text-gray-600">Registre as atividades e movimentações do dia</p>
       </div>
 
+      {/* Mensagem de Erro */}
+      {error && (
+        <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+          {error}
+        </div>
+      )}
+
+      {/* Loading */}
+      {loading && (
+        <div className="mb-4 p-4 bg-blue-100 border border-blue-400 text-blue-700 rounded-lg">
+          Carregando...
+        </div>
+      )}
+
       {/* Resumo de Atividades */}
       <ActivitySummary activities={getFilteredActivities()} />
 
@@ -225,6 +317,24 @@ export default function Activities() {
                 className="input-field"
                 readOnly
               />
+            </div>
+            <div>
+              <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">Funcionário</label>
+              <select
+                name="userId"
+                value={formData.userId}
+                onChange={handleChange}
+                className="input-field"
+                title="Selecione o funcionário que realizou a atividade"
+              >
+                <option value="">(Selecionar funcionário — padrão: você)</option>
+                {employees.map(e => (
+                  <option key={e.id} value={e.userId || ''} disabled={!e.userId}>
+                    {e.name} {e.position ? `— ${e.position}` : ''} {e.userId ? '' : '(sem conta)'}
+                  </option>
+                ))}
+              </select>
+              <p className="text-xs text-gray-500 mt-1">Somente funcionários com conta podem ser atribuídos; crie conta em Funcionários → Vincular usuário</p>
             </div>
             <div>
               <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">Expediente</label>

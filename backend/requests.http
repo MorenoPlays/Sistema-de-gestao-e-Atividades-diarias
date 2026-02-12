@@ -1,0 +1,321 @@
+### Star Step Game - Exemplos de Requisições HTTP
+
+## 🔐 AUTENTICAÇÃO
+
+### Registrar (Criar Empresa + Admin User)
+POST http://localhost:3001/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "João Silva",
+  "email": "joao@empresa.com",
+  "password": "Senha123!",
+  "companyName": "Tech Solutions Angola",
+  "phone": "+244923456789"
+}
+
+### Login
+POST http://localhost:3001/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "joao@empresa.com",
+  "password": "Senha123!"
+}
+
+### Verificar Token
+GET http://localhost:3001/api/auth/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+---
+
+## 👥 USUÁRIOS
+
+### Criar Novo Usuário (Admin Only)
+POST http://localhost:3001/api/users
+Authorization: Bearer YOUR_ADMIN_TOKEN
+Content-Type: application/json
+
+{
+  "name": "Maria Santos",
+  "email": "maria@empresa.com",
+  "password": "MariaSenha123!",
+  "role": "EMPLOYEE"
+}
+
+### Listar Todos os Usuários
+GET http://localhost:3001/api/users
+Authorization: Bearer YOUR_TOKEN
+
+### Obter Dados do Usuário Atual
+GET http://localhost:3001/api/users/me
+Authorization: Bearer YOUR_TOKEN
+
+### Obter Usuário Específico
+GET http://localhost:3001/api/users/clp7h3z3r0000w8xp8qkz9z3z
+Authorization: Bearer YOUR_TOKEN
+
+### Atualizar Usuário (Admin ou o próprio)
+PUT http://localhost:3001/api/users/clp7h3z3r0000w8xp8qkz9z3z
+Authorization: Bearer YOUR_TOKEN
+Content-Type: application/json
+
+{
+  "name": "Maria dos Santos",
+  "phone": "+244923000000",
+  "role": "MANAGER"
+}
+
+### Alterar Senha
+POST http://localhost:3001/api/users/clp7h3z3r0000w8xp8qkz9z3z/change-password
+Authorization: Bearer YOUR_TOKEN
+Content-Type: application/json
+
+{
+  "oldPassword": "MariaSenha123!",
+  "newPassword": "NovaSenh@456"
+}
+
+### Desativar Usuário (Admin)
+POST http://localhost:3001/api/users/clp7h3z3r0000w8xp8qkz9z3z/deactivate
+Authorization: Bearer YOUR_ADMIN_TOKEN
+
+### Ativar Usuário (Admin)
+POST http://localhost:3001/api/users/clp7h3z3r0000w8xp8qkz9z3z/activate
+Authorization: Bearer YOUR_ADMIN_TOKEN
+
+### Deletar Usuário (Admin)
+DELETE http://localhost:3001/api/users/clp7h3z3r0000w8xp8qkz9z3z
+Authorization: Bearer YOUR_ADMIN_TOKEN
+
+---
+
+## 🏢 EMPRESA
+
+### Obter Informações da Empresa
+GET http://localhost:3001/api/company
+Authorization: Bearer YOUR_TOKEN
+
+### Atualizar Empresa (Admin)
+PUT http://localhost:3001/api/company
+Authorization: Bearer YOUR_ADMIN_TOKEN
+Content-Type: application/json
+
+{
+  "name": "Tech Solutions Angola LTDA",
+  "email": "contato@techsolutions.com",
+  "phone": "+244222123456",
+  "address": "Rua Principal, 123",
+  "city": "Luanda",
+  "logoUrl": "https://example.com/logo.png",
+  "timezone": "Africa/Luanda"
+}
+
+### Obter Estatísticas da Empresa
+GET http://localhost:3001/api/company/stats
+Authorization: Bearer YOUR_TOKEN
+
+### Listar Usuários da Empresa
+GET http://localhost:3001/api/company/users
+Authorization: Bearer YOUR_TOKEN
+
+---
+
+## 📋 ATIVIDADES
+
+### Criar Atividade
+POST http://localhost:3001/api/activities
+Authorization: Bearer YOUR_TOKEN
+Content-Type: application/json
+
+{
+  "date": "2026-02-11T10:00:00Z",
+  "description": "Desenvolvimento de features no portal",
+  "hoursStart": "08:00",
+  "hoursEnd": "16:30",
+  "moneyIn": 5000.50,
+  "moneyOut": 1200.00
+}
+
+### Listar Atividades (com filtros opcionais)
+GET http://localhost:3001/api/activities
+Authorization: Bearer YOUR_TOKEN
+
+### Listar Atividades com Filtro de Data
+GET http://localhost:3001/api/activities?startDate=2026-02-01&endDate=2026-02-28
+Authorization: Bearer YOUR_TOKEN
+
+### Listar Atividades de um Usuário Específico
+GET http://localhost:3001/api/activities?userId=clp7h3z3r0000w8xp8qkz9z3z
+Authorization: Bearer YOUR_TOKEN
+
+### Obter Atividade Específica
+GET http://localhost:3001/api/activities/clp7h3z3r0000w8xp8qkz9z3z
+Authorization: Bearer YOUR_TOKEN
+
+### Atualizar Atividade
+PUT http://localhost:3001/api/activities/clp7h3z3r0000w8xp8qkz9z3z
+Authorization: Bearer YOUR_TOKEN
+Content-Type: application/json
+
+{
+  "description": "Desenvolvimento de features - Versão 2",
+  "hoursStart": "08:30",
+  "hoursEnd": "17:00",
+  "moneyIn": 5500.00,
+  "moneyOut": 1500.00
+}
+
+### Deletar Atividade
+DELETE http://localhost:3001/api/activities/clp7h3z3r0000w8xp8qkz9z3z
+Authorization: Bearer YOUR_TOKEN
+
+### Obter Atividades de um Usuário
+GET http://localhost:3001/api/activities/user/clp7h3z3r0000w8xp8qkz9z3z
+Authorization: Bearer YOUR_TOKEN
+
+### Fecho Diário (Dia Específico)
+GET http://localhost:3001/api/activities/daily-closure/2026-02-11
+Authorization: Bearer YOUR_TOKEN
+
+### Relatório Mensal
+GET http://localhost:3001/api/activities/monthly-report/2/2026
+Authorization: Bearer YOUR_TOKEN
+
+---
+
+## 💰 SALÁRIOS
+
+### Criar Folha de Salário (Admin/Manager)
+POST http://localhost:3001/api/salaries
+Authorization: Bearer YOUR_ADMIN_TOKEN
+Content-Type: application/json
+
+{
+  "month": 2,
+  "year": 2026,
+  "userId": "clp7h3z3r0000w8xp8qkz9z3z",
+  "baseSalary": 250000,
+  "deductions": 25000
+}
+
+### Listar Folhas de Salário da Empresa
+GET http://localhost:3001/api/salaries
+Authorization: Bearer YOUR_TOKEN
+
+### Obter Folha de Salário Específica
+GET http://localhost:3001/api/salaries/clp7h3z3r0000w8xp8qkz9z3z
+Authorization: Bearer YOUR_TOKEN
+
+### Atualizar Folha de Salário
+PUT http://localhost:3001/api/salaries/clp7h3z3r0000w8xp8qkz9z3z
+Authorization: Bearer YOUR_ADMIN_TOKEN
+Content-Type: application/json
+
+{
+  "baseSalary": 260000,
+  "deductions": 30000
+}
+
+### Deletar Folha de Salário (Admin)
+DELETE http://localhost:3001/api/salaries/clp7h3z3r0000w8xp8qkz9z3z
+Authorization: Bearer YOUR_ADMIN_TOKEN
+
+### Obter Folhas de Salário de um Usuário
+GET http://localhost:3001/api/salaries/user/clp7h3z3r0000w8xp8qkz9z3z
+Authorization: Bearer YOUR_TOKEN
+
+### Relatório de Salários do Mês
+GET http://localhost:3001/api/salaries/report/2/2026
+Authorization: Bearer YOUR_TOKEN
+
+---
+
+## 🔍 RESPOSTAS DE SUCESSO
+
+### Sucesso 200/201
+{
+  "success": true,
+  "message": "Operação realizada com sucesso",
+  "data": { /* dados retornados */ }
+}
+
+---
+
+## ⚠️ ERROS COMUNS
+
+### 401 - Token não fornecido ou inválido
+{
+  "success": false,
+  "message": "Token inválido ou expirado"
+}
+
+### 403 - Acesso não autorizado
+{
+  "success": false,
+  "message": "Acesso restrito a administradores"
+}
+
+### 404 - Recurso não encontrado
+{
+  "success": false,
+  "message": "Usuário não encontrado"
+}
+
+### 400 - Validação falhou
+{
+  "success": false,
+  "message": "Validação falhou",
+  "error": [
+    {
+      "path": ["email"],
+      "message": "Email inválido"
+    }
+  ]
+}
+
+---
+
+## 💡 DICAS
+
+1. **Salvar Token**: Após login/register, guardar o token em localStorage
+2. **Header Authorization**: Sempre incluir `Authorization: Bearer TOKEN` nas requisições protegidas
+3. **JSON Headers**: Incluir `Content-Type: application/json` em POST/PUT
+4. **CORS**: Se erro CORS, verificar `CORS_ORIGIN` no `.env`
+5. **Datas ISO**: Usar formato ISO 8601 (2026-02-11T10:00:00Z)
+6. **Horários**: Usar formato HH:MM (08:00, 16:30)
+7. **Roles**: ADMIN, MANAGER, EMPLOYEE
+
+---
+
+## 🧪 TESTAR COM cURL
+
+```bash
+# 1. Registrar
+curl -X POST http://localhost:3001/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"name":"João","email":"joao@test.com","password":"Teste123","companyName":"MyCompany"}'
+
+# 2. Login (salvar token)
+TOKEN=$(curl -X POST http://localhost:3001/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"joao@test.com","password":"Teste123"}' \
+  | jq -r '.data.token')
+
+# 3. Criar atividade
+curl -X POST http://localhost:3001/api/activities \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "date":"2026-02-11T10:00:00Z",
+    "description":"Test",
+    "hoursStart":"08:00",
+    "hoursEnd":"16:00",
+    "moneyIn":1000,
+    "moneyOut":500
+  }'
+```
+
+---
+
+Feito! Agora você tem todos os exemplos de requisições. 🎉

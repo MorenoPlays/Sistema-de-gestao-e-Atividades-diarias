@@ -1,52 +1,72 @@
-# 🎮 Star Step Game - Sistema de Gestão
+# 🎮 Star Step Game - Sistema de Gestão de Atividades
 
-Sistema completo de gestão de atividades e folha de salário desenvolvido em React com Tailwind CSS.
+> **Sistema completo de gestão de atividades diárias e folha de pagamento**  
+> Desenvolvido em React + Express + PostgreSQL
 
 ## 🚀 Funcionalidades
 
 ### 🔐 Autenticação
-- **Login** - Sistema de autenticação com email e senha
-- **Cadastro** - Criação de novas contas de usuário
-- **Persistência** - Dados salvos no localStorage do navegador
+- **Login** - Autenticação com JWT seguro
+- **Cadastro** - Registrar nova empresa e admin user
+- **Persistência** - Token salvo em localStorage
+- **Proteção** - Endpoint autenticação verificada
 
 ### 📋 Atividades Diárias
 - Registro de atividades com data, semana e expediente
-- Controle de entrada e saída de dinheiro (Kz)
+- Controle de entrada e saída de dinheiro
+- Cálculo automático de saldo/balance
 - Descrição detalhada das atividades
-- Histórico completo em tabela
-- Adicionar e remover atividades
+- Histórico completo com filtros
+- Relatórios diários e mensais
+- API backend para persistência
 
 ### 💰 Folha de Salário
 - Geração profissional de folhas de pagamento
 - Campos para mês, ano e dados do funcionário
 - Cálculo automático de salário líquido
-- Espaços para assinaturas (trabalhador e chefe)
-- Função de impressão
+- Histórico completo de pagamentos
+- Relatórios mensais
+- API backend para persistência
+
+### 👥 Gestão de Usuários
+- **Roles:** Admin, Manager, Employee
+- **Permissões:** Baseadas em papéis
+- **Criação:** Admins podem criar novos usuários
+- **Gestão:** Ativar/desativar usuários
 
 ## 📦 Tecnologias Utilizadas
 
+### Frontend
 - **React 18** - Biblioteca JavaScript para interfaces
-- **Vite** - Build tool moderno e rápido
-- **Tailwind CSS** - Framework CSS utilitário
-- **LocalStorage** - Armazenamento local de dados
+- **Vite** - Build tool moderno
+- **Tailwind CSS** - Framework CSS
+- **Fetch API** - Cliente HTTP
+
+### Backend
+- **Express.js** - Framework web Node.js
+- **TypeScript** - Type safety
+- **PostgreSQL** - Banco de dados
+- **Prisma** - ORM
+- **JWT** - Autenticação
+- **bcryptjs** - Hashing de senhas
+- **Zod** - Validação
 
 ## 🛠️ Instalação e Configuração
 
 ### Pré-requisitos
-- Node.js (versão 16 ou superior)
+- Node.js 18+
+- PostgreSQL 15+
 - npm ou yarn
 
-### Passos para Instalação
+### Quick Start (5 minutos)
 
-1. **Navegue até a pasta do projeto:**
+**Opção 1: Setup Automático**
 ```bash
-cd star-step-app
+chmod +x setup.sh
+./setup.sh
 ```
 
-2. **Instale as dependências:**
-```bash
-npm install
-```
+**Opção 2: Setup Manual**
 
 3. **Inicie o servidor de desenvolvimento:**
 ```bash
