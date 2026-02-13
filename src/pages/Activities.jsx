@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { authService, activityService, employeeService } from '../utils/api';
+import { authService, activityService, employeeService, companyService } from '../utils/api';
 import { exportService } from '../utils/exportService';
 import ActivitySummary from '../components/ActivitySummary';
 import DateRangeFilter from '../components/DateRangeFilter';
@@ -57,7 +57,7 @@ export default function Activities() {
   const [formData, setFormData] = useState({
     date: new Date().toISOString().split('T')[0],
     week: calculateWeekFromDate(new Date().toISOString().split('T')[0]),
-    company: 'MPGestor',
+  company: '',
     userId: '',
     moneyIn: '',
     moneyOut: '',
@@ -76,7 +76,22 @@ export default function Activities() {
       setError('');
       const user = await authService.getCurrentUser();
       const userData = user.data || user;
-      setCurrentUser(userData);
+  setCurrentUser(userData);
+      // Preencher empresa automaticamente a partir dos dados do usuário autenticado
+      // Se o objeto user não trouxer o nome da company, buscar via API /company
+      let companyName = userData?.company?.name;
+      if (!companyName && userData?.companyId) {
+        try {
+          const compRes = await companyService.getCompany();
+          const comp = compRes?.data || compRes || null;
+          companyName = comp?.name || userData.companyId;
+        } catch (err) {
+          console.warn('Não foi possível obter dados da company via API:', err);
+          companyName = userData.companyId;
+        }
+      }
+
+      setFormData(fd => ({ ...fd, company: companyName || fd.company }));
       // carregar lista de funcionários da empresa (para select)
       try {
         const res = await employeeService.listEmployees();

@@ -7,7 +7,7 @@ export default function Header({ user, onLogout }) {
         <div className="flex justify-between items-center py-3 md:py-4">
           <div className="flex items-center gap-2 md:gap-3 min-w-0">
             <div className="p-1.5 md:p-2 rounded-lg md:rounded-xl flex-shrink-0 bg-transparent">
-              <img src="/favicon_io/android-chrome-512x512.png" alt="MPGestor" className="w-6 md:w-8 h-6 md:h-8 object-contain" />
+              <img src={`${import.meta.env.BASE_URL}favicon_io/android-chrome-512x512.png`} alt="MPGestor" className="w-6 md:w-8 h-6 md:h-8 object-contain" />
             </div>
             <div className="min-w-0">
               <h1 className="text-lg md:text-xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent truncate">

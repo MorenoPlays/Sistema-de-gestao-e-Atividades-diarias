@@ -36,7 +36,7 @@ export default function Login({ onLogin, onSwitchToRegister }) {
   <div className="w-28 h-28 rounded-lg overflow-hidden 
                   shadow-xl border-4 border-white">
               <img
-                src="/favicon_io/android-chrome-512x512.png"
+                src={`${import.meta.env.BASE_URL}favicon_io/android-chrome-512x512.png`}
                 alt="Logo MPGestor"
                 className="w-full h-full object-cover"
               />
